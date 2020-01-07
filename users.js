@@ -1,33 +1,33 @@
 function fetchData(data) {
     return new Promise(resolve => setTimeout(() => {
-      resolve(data)
+        resolve(data)
     }, 1000))
 }
 
-function sendUserLoginRequest(userId){
+async function sendUserLoginRequest(userId) {
     console.log(`Sending login request for ${userId}...`);
-    return fetchData(userId).then(() => {
+    return await fetchData(userId).then(() => {
         console.log('Login successfull.', userId);
         return userId;
     })
 }
 
-function getUserProfile(userId){
+function getUserProfile(userId) {
     console.log(`Fetching profile for ${userId}...`);
     return fetchData({
-        user1: {name: 'Vijay', points: 100},
-        user2: {name: 'Sahana', points: 200}
+        user1: { name: 'Vijay', points: 100 },
+        user2: { name: 'Sahana', points: 200 }
     }).then(profiles => {
         console.log(`Received profile for ${userId}`);
         return profiles[userId];
     });
 }
 
-function getUserPosts(userId){
+function getUserPosts(userId) {
     console.log(`Fetching posts for ${userId}...`);
     return fetchData({
-        user1: [{id: 1, title: 'Economics 101'}, {id: 2, title: 'How to negotiate'}],
-        user2: [{id: 3, title: 'CSS Animations'}, {id: 4, title: 'Understanding event loop'}]
+        user1: [{ id: 1, title: 'Economics 101' }, { id: 2, title: 'How to negotiate' }],
+        user2: [{ id: 3, title: 'CSS Animations' }, { id: 4, title: 'Understanding event loop' }]
     }).then(posts => {
         console.log(`Received posts for ${userId}`);
         return posts[userId];
@@ -39,10 +39,17 @@ function getUserPosts(userId){
  * Task 1: Send a login request for user1 -> get user profile data -> get user posts data
  */
 
-function userDataSerial(){
-  console.time('userData-serial');
-  // Write code here
-  console.timeEnd('userData-serial');
+function userDataSerial() {
+    console.time('userData-serial');
+    sendUserLoginRequest('user1').then(data => {
+        getUserProfile(data).then(data1 => {
+            console.log(data1);
+        });
+        getUserPosts(data).then(data1 => {
+            console.log(data1);
+        });
+    })
+    console.timeEnd('userData-serial');
 }
 
 /**
@@ -50,9 +57,13 @@ function userDataSerial(){
  */
 
 function userDataParallel() {
-  console.time('userData-parallel');
-  // Write code here
-  console.timeEnd('userData-parallel');
+    console.time('userData-parallel');
+    sendUserLoginRequest('user1').then(data => {
+        Promise.all([getUserProfile(data), getUserPosts(data)]).then(dataArray => {
+            console.log(dataArray);
+        })
+    })
+    console.timeEnd('userData-parallel');
 }
 
 userDataSerial();

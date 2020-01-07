@@ -1,7 +1,7 @@
 function getBoard() {
   return new Promise((resolve, reject) => {
     console.log('Fetching board...');
-    setTimeout(function() {
+    setTimeout(function () {
       let board = {
         id: "def453ed",
         name: "Thanos"
@@ -15,7 +15,7 @@ function getBoard() {
 function getLists(boardId) {
   return new Promise((resolve, reject) => {
     console.log(`Fetching lists for board id ${boardId}...`);
-    setTimeout(function() {
+    setTimeout(function () {
       let lists = {
         def453ed: [
           {
@@ -53,7 +53,7 @@ function getLists(boardId) {
 function getCards(listId) {
   return new Promise((resolve, reject) => {
     console.log(`Fetching cards for list id ${listId}...`);
-    setTimeout(function() {
+    setTimeout(function () {
       let cards = {
         qwsa221: [
           {
@@ -127,3 +127,48 @@ function getCards(listId) {
 // Task 1 board -> lists -> cards for list qwsa221
 // Task 2 board -> lists -> cards for list qwsa221 and cards for list jwkh245 simultaneously
 // Task 3 board -> lists -> cards for all lists simultaneously
+
+//task 1
+function task1() {
+
+  getBoard().then(data => {
+    getLists(data.id).then(data => {
+      // console.log(data[0].id);
+      getCards(data[0].id).then(data => {
+        console.log(data);
+      })
+    })
+  })
+}
+//task 2
+function task2() {
+  getBoard().then(data => {
+    getLists(data.id).then(data => {
+      getCards(data[0].id).then(data => {
+        console.log(data);
+      })
+      getCards(data[1].id).then(data => {
+        console.log(data);
+      })
+    })
+  })
+}
+
+
+//task3
+function task3() {
+  getBoard().then(data => {
+    getLists(data.id).then(data => {
+      for (card of data) {
+        getCards(card.id).then(data => { console.log(data) });
+      }
+    })
+  })
+}
+
+
+//task1();
+
+//task2();
+
+//task3();
